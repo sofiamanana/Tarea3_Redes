@@ -26,7 +26,7 @@ class Tp2 ( Topo ):
         h6 = self.addHost( 'h6', mac = '00:00:00:00:00:06'  )
 
        
-        
+       
         s1 = self.addSwitch( 's1' )
         s2 = self.addSwitch( 's2' )
         s3 = self.addSwitch( 's3' )
