@@ -167,27 +167,44 @@ class LearningSwitch (object):
             log.debug("Paquete va a destino externo")
             drop()
             return
-        if event.port == 2 or event.port == 4 or event.port == 17:
-            if str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02':
-              port =  self.macToPort[packet.dst]
-            else:
-                port = 21
-        elif event.port == 6 or event.port == 8 or event.port == 19:
+        #SACAR LINK S2 S3
+        #event.port -> puerto entrada del paquete
+        #port -> puerto de salida del paquete
+
+        if event.port == 6 or event.port == 8:
             if str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
               port =  self.macToPort[packet.dst]
             else:
                 port = 18
-        elif event.port == 10 or event.port == 12 or event.port == 23:
+        if event.port == 21 or event.port == 17:
+            if str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02' or str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
+              port =  self.macToPort[packet.dst]
+            else:
+                port = 21
+        if event.port == 14 or event.port == 16:
+          if str(packet.dst) == '00:00:00:00:00:07' or str(packet.dst) == '00:00:00:00:00:08':
+            port =  self.macToPort[packet.dst]
+          elif str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02' or str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
+            port = 22
+          else: 
+            port = 24
+        if event.port == 22 or event.port == 24:
+            if str(packet.dst) == '00:00:00:00:00:07' or str(packet.dst) == '00:00:00:00:00:08':
+              port =  self.macToPort[packet.dst]
+            elif str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02' or str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
+              port = 22
+            else:
+                port = 24
+        if event.port == 10 or event.port == 12:
             if str(packet.dst) == '00:00:00:00:00:05' or str(packet.dst) == '00:00:00:00:00:06':
               port =  self.macToPort[packet.dst]
             else:
-                port = 20
-        elif event.port == 22 or event.port == 14 or event.port == 16:
-            if str(packet.dst) == '00:00:00:00:00:07' or str(packet.dst) == '00:00:00:00:00:08':
+                port = 23
+        if event.port == 23:
+            if str(packet.dst) == '00:00:00:00:00:05' or str(packet.dst) == '00:00:00:00:00:06':
               port =  self.macToPort[packet.dst]
             else:
-                port = 24  
-        
+                port = 23
         if port == event.port: # 5
           # 5a
           log.warning("Same port for packet from %s -> %s on %s.%s.  Drop."

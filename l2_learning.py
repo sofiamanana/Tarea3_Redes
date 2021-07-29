@@ -156,38 +156,6 @@ class LearningSwitch (object):
         flood("Port for %s unknown -- flooding" % (packet.dst,)) # 4a
       else:
         port = self.macToPort[packet.dst]
-
-        mac_list = ['00:00:00:00:00:01', '00:00:00:00:00:02', '00:00:00:00:00:03', '00:00:00:00:00:04' ,'00:00:00:00:00:05', '00:00:00:00:00:06', '00:00:00:00:00:07', '00:00:00:00:00:08']
-
-        if (str(packet.src)) not in mac_list:
-            log.debug("Paquete de host externo")
-            drop()
-            return
-        if str(packet.dst) not in mac_list:
-            log.debug("Paquete va a destino externo")
-            drop()
-            return
-        if event.port == 2 or event.port == 4 or event.port == 17:
-            if str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02':
-              port =  self.macToPort[packet.dst]
-            else:
-                port = 21
-        elif event.port == 6 or event.port == 8 or event.port == 19:
-            if str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
-              port =  self.macToPort[packet.dst]
-            else:
-                port = 18
-        elif event.port == 10 or event.port == 12 or event.port == 23:
-            if str(packet.dst) == '00:00:00:00:00:05' or str(packet.dst) == '00:00:00:00:00:06':
-              port =  self.macToPort[packet.dst]
-            else:
-                port = 20
-        elif event.port == 22 or event.port == 14 or event.port == 16:
-            if str(packet.dst) == '00:00:00:00:00:07' or str(packet.dst) == '00:00:00:00:00:08':
-              port =  self.macToPort[packet.dst]
-            else:
-                port = 24  
-        
         if port == event.port: # 5
           # 5a
           log.warning("Same port for packet from %s -> %s on %s.%s.  Drop."
