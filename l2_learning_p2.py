@@ -168,87 +168,97 @@ class LearningSwitch (object):
             drop()
             return
 
+        if event.port == 20 or event.port == 22:
+          port = 18
+
         if event.port == 11:
-          if str(packet.src) == '00:00:00:00:00:03' or str(packet.src) == '00:00:00:00:00:04':
+          if str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
             port = self.macToPort[packet.dst]
           else:
-            log.debug("Paquete no permitido")
+            log.debug("ALTO AHI LOCA")
             drop()
             return
 
-        if event.port == 6 or event.port == 7:
-          #verificar que sea http
-          if(port == 24 and packet.dst in self.macToPort):
-            objeto = packet.find('tcp')
-            if objeto is None:
-                log.debug("SE HA DETECTADO UN PAQUETE QUE NO ES HTTP, DROPEANDO...")
-                drop(3)
-                return
-            else:
-                if objeto.SYN or objeto.ACK or 'HTTP' in objeto.payload:
-                    log.debug("MENSAJE HTTP DETECTADO")
-                    log.debug(objeto.payload)
-                else:
-                    log.debug("SE HA DETECTADO UN PAQUETE DE CONEXION TCP QUE NO ES HTTP, DROPEANDO...")
-                    drop(3)
-                    return
+        if event.port == 6 or event.port == 8:
+          if str(packet.dst) == '00:00:00:00:00:06':
+            port = 24
+          else:
+            log.debug("ALTO AHI LOCA")
+            drop()
+            return
         
         if event.port == 9:
-          if str(packet.src) == '00:00:00:00:00:01' or str(packet.src) == '00:00:00:00:00:02':
+          if str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02':
             port = self.macToPort[packet.dst]
           else:
-            log.debug("Paquete no permitido")
+            log.debug("ALTO AHI LOCA")
             drop()
             return            
         
         if event.port == 2 or event.port == 3:
-          if(port == 16 and packet.dst in self.macToPort):
-            objeto = packet.find('tcp')
-            if objeto is None:
-                log.debug("SE HA DETECTADO UN PAQUETE QUE NO ES HTTP, DROPEANDO...")
-                drop(3)
-                return
-            else:
-                if objeto.SYN or objeto.ACK or 'HTTP' in objeto.payload:
-                    log.debug("MENSAJE HTTP DETECTADO")
-                    log.debug(objeto.payload)
-                else:
-                    log.debug("SE HA DETECTADO UN PAQUETE DE CONEXION TCP QUE NO ES HTTP, DROPEANDO...")
-                    drop(3)
-                    return
+          if str(packet.dst) == '00:00:00:00:00:05':
+            port = 15
+          else:
+            log.debug("ALTO AHI LOCA")
+            drop()
+            return 
 
         if event.port == 14:
-          if str(packet.src) == '00:00:00:00:00:03' or str(packet.src) == '00:00:00:00:00:04':
+          if str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
             port = 12
           else:
-            log.debug("Paquete no permitido")
+            log.debug("ALTO AHI LOCA")
             drop()
             return
+
+        if event.port == 23:
+          port = 15
         
-        if event.port == 18:
-          if str(packet.src) == '00:00:00:00:00:01' or str(packet.src) == '00:00:00:00:00:02':
+        if event.port == 17:
+          if str(packet.dst) == '00:00:00:00:00:01' or str(packet.dst) == '00:00:00:00:00:02':
             port = 10
-          elif str(packet.src) == '00:00:00:00:00:03' or str(packet.src) == '00:00:00:00:00:04':
+          elif str(packet.dst) == '00:00:00:00:00:03' or str(packet.dst) == '00:00:00:00:00:04':
             port = 13
 
-        if event.port == 15:
-          if (port == 22 and packet.dst in self.macToPort) or (port == 20 and packet.dst in self.macToPort):
+        if event.port == 16:
+          if str(packet.dst) == '00:00:00:00:00:05':
+            port = 20
+          elif str(packet.dst) == '00:00:00:00:00:06':
+            port = 22
+          else:
+            log.debug("ALTO AHI LOCA")
+            drop()
+            return
+
+        if(port == 20 and packet.dst in self.macToPort):
             objeto = packet.find('tcp')
             if objeto is None:
-                log.debug("SE HA DETECTADO UN PAQUETE QUE NO ES HTTP, DROPEANDO...")
+                log.debug("Mensaje no es HTTP...")
                 drop(3)
                 return
             else:
                 if objeto.SYN or objeto.ACK or 'HTTP' in objeto.payload:
-                    log.debug("MENSAJE HTTP DETECTADO")
+                    log.debug("Mensaje HTTP detectado...")
                     log.debug(objeto.payload)
                 else:
-                    log.debug("SE HA DETECTADO UN PAQUETE DE CONEXION TCP QUE NO ES HTTP, DROPEANDO...")
+                    log.debug("Mensaje no es HTTP...")
                     drop(3)
                     return
                     
-        if event.port == 20 or event.port == 22:
-          port = 17
+        if(port == 22 and packet.dst in self.macToPort):
+            objeto = packet.find('tcp')
+            if objeto is None:
+                log.debug("Mensaje no es HTTP...")
+                drop(3)
+                return
+            else:
+                if objeto.SYN or objeto.ACK or 'HTTP' in objeto.payload:
+                    log.debug("Mensaje HTTP detectado...")
+                    log.debug(objeto.payload)
+                else:
+                    log.debug("Mensaje no es HTTP...")
+                    drop(3)
+                    return
 
         if port == event.port: # 5
           # 5a
